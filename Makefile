@@ -30,10 +30,10 @@ normalize:
 
 
 
-pre-ingest:
+pre-ingest: clean normalize
 
 	loopr -p -j --listfile tempdata/normalize_cmd_manifest.json \
-	--cmd-string 'tail -n +1 tempdata/{outfile} | tuple2json --delimiter "|" --keys=application,is_renewal,type,date,status' \
+	--cmd-string 'tail -n +2 tempdata/{outfile} | tuple2json --delimiter "|" --keys=application,is_renewal,type,date,status' \
 	> tempdata/pre_ingest_cmds.txt
 
 	tuplegen --delimiter '%' --listfiles=tempdata/output_files.txt,tempdata/pre_ingest_cmds.txt \
@@ -46,6 +46,15 @@ pre-ingest:
 
 	chmod u+x temp_scripts/create_pre_ingest_files.sh
 	temp_scripts/create_pre_ingest_files.sh
+
+
+pipeline-lex:
+
+	ls data/FOIL*.jsonl > tempdata/pre_ingest_files.txt
+
+	loopr -t --listfile tempdata/pre_ingest_files.txt --vartoken '%' \
+	--cmd-string 'cat % | ngst --config config/ingest_lexfiles.yaml --target test'
+	
 
 
 scratch:
