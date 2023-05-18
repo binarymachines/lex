@@ -1,4 +1,8 @@
 
+init:
+	cat required_dirs.txt | xargs mkdir -p 
+
+
 clean:
 	rm -f tempdata/*
 	rm -f temp_scripts/*
@@ -29,7 +33,20 @@ normalize:
 pre-ingest:
 
 	loopr -p -j --listfile tempdata/normalize_cmd_manifest.json \
-	--cmd-string 'tail -n +1 tempdata/{outfile} | tuple2json --delimiter "|" --keys=application,is_renewal,type,date,status'
+	--cmd-string 'tail -n +1 tempdata/{outfile} | tuple2json --delimiter "|" --keys=application,is_renewal,type,date,status' \
+	> tempdata/pre_ingest_cmds.txt
+
+	tuplegen --delimiter '%' --listfiles=tempdata/output_files.txt,tempdata/pre_ingest_cmds.txt \
+	| tuple2json --delimiter '%' --keys=outfile,cmd > tempdata/pre_ingest_cmd_manifest.json
+
+	cp template_files/shell_script_core.sh.tpl temp_scripts/create_pre_ingest_files.sh
+
+	loopr -p -j --listfile tempdata/pre_ingest_cmd_manifest.json \
+	--cmd-string '{cmd} > data/{outfile}' >> temp_scripts/create_pre_ingest_files.sh
+
+	chmod u+x temp_scripts/create_pre_ingest_files.sh
+	temp_scripts/create_pre_ingest_files.sh
+
 
 scratch:
 
