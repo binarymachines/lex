@@ -1,7 +1,7 @@
 CREATE TABLE "dim_date_day" (
   "id" int4 NOT NULL,
   "value" int2 NOT NULL,
-  "label" varchar(2) NOT NULL,
+  "label" varchar(6) NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -42,13 +42,13 @@ CREATE TABLE "fact_permit" (
   "date_month_id" int4 NOT NULL,
   "date_year_id" int4 NOT NULL,
   "type_id" int4 NOT NULL,
-  "status_id" int4 NOT NULL,
+  "status" varchar(32) NOT NULL,
   PRIMARY KEY ("id")
 );
 
-ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_type_1" FOREIGN KEY ("type_id") REFERENCES "dim_type" ("id");
+ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_type_1" FOREIGN KEY ("type_id") REFERENCES "dim_permit_type" ("id");
 ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_date_month_1" FOREIGN KEY ("date_month_id") REFERENCES "dim_date_month" ("id");
 ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_date_year_1" FOREIGN KEY ("date_year_id") REFERENCES "dim_date_year" ("id");
 ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_date_day_1" FOREIGN KEY ("date_day_id") REFERENCES "dim_date_day" ("id");
-ALTER TABLE "fact_permit" ADD CONSTRAINT "fk_fact_permit_dim_status_1" FOREIGN KEY ("status_id") REFERENCES "dim_status" ("id");
+
 

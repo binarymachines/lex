@@ -5,6 +5,34 @@ globals:
 
 
 service_objects:
+
+  olap:
+    class: OLAPDimensionSvc
+    init_params:
+      - name: host
+        value: localhost
+  
+      - name: port
+        value: 5432
+  
+      - name: dbname
+        value: lexdb
+
+      - name: schema
+        value: public
+  
+      - name: username
+        value: lexdba
+  
+      - name: password
+        value: $LEX_DB_PASSWORD
+
+      - name: connect_timeout
+        value: 5
+
+      - name: dimension_tables
+        value: [dim_date_day, dim_date_month, dim_date_year, dim_permit_type]
+
   postgres:
       class: PostgreSQLService
       init_params:

@@ -10,7 +10,7 @@ clean:
 
 
 dblogin:
-	psql -U lexdba --port=5432 --host=localhost -d lexdb
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -U lexdba --port=5432 --host=localhost -d lexdb
 
 
 db-generate-dim-data:
@@ -103,7 +103,7 @@ pipeline-lex:
 	>> temp_scripts/ingest_records.sh
 
 	chmod u+x temp_scripts/ingest_records.sh
-	#temp_scripts/ingest_records.sh
+	temp_scripts/ingest_records.sh
 
 
 

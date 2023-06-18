@@ -155,7 +155,7 @@ class OLAPDimensionSvc(object):
             resultset = session.query(data_object).all()
 
             for record in resultset:
-                dim_data[str(record.label)] = (record.id, record.value)
+                dim_data[record.label] = (record.id, record.value)
 
         return dim_data
 
@@ -171,8 +171,8 @@ class OLAPDimensionSvc(object):
 
 
     def dim_label_for_value(self, dim_table_name, value):
-        rltuple = self.dimensions[dim_table_name][str(value)]
-        return rltuple[1]
+        rltuple = self.dimensions_by_value[dim_table_name][str(value)]
+        return rltuple[3]
     
     
     def get_dim_ids_for_timestamp(self, source_timestamp) -> dict:
