@@ -1,0 +1,50 @@
+globals:
+  project_home: $LEX_HOME
+  service_module: lex_services
+  datastore_module: lex_datastores
+
+
+service_objects:
+  postgres:
+      class: PostgreSQLService
+      init_params:
+        - name: host
+          value: localhost
+    
+        - name: port
+          value: 5432
+    
+        - name: dbname
+          value: lex
+
+        - name: schema
+          value: public
+    
+        - name: username
+          value: postgres
+    
+        - name: password
+          value: notobvious
+
+        - name: connect_timeout
+          value: 5
+
+
+datastores:
+  console:
+    class: ConsoleDatastore
+    init_params:
+
+  db:
+    class: PostgresDatastore
+    init_params:
+        
+    channel_select_function: 
+    channels:
+        
+
+ingest_targets:
+  db:
+    datastore: db
+    checkpoint_interval: 1000
+

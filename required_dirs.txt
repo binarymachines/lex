@@ -1,3 +1,4 @@
 temp_scripts
+temp_sql
 tempdata
 data

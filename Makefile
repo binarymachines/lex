@@ -6,6 +6,26 @@ init:
 clean:
 	rm -f tempdata/*
 	rm -f temp_scripts/*
+	rm -f temp_sql/*
+
+
+generate-dim-data:
+
+
+	cat /dev/null > temp_sql/dimension_data.sql
+
+	dgenr8 --plugin-module dim_day_generator --sql --schema public --dim-table dim_date_day --columns id value label \
+	>> temp_sql/dimension_data.sql
+
+	dgenr8 --plugin-module dim_month_generator --sql --schema public --dim-table dim_date_month --columns id value label \
+	>> temp_sql/dimension_data.sql
+	
+	dgenr8 --plugin-module dim_year_generator --sql --schema public --dim-table dim_date_year --columns id value label \
+	>> temp_sql/dimension_data.sql
+
+
+	dgenr8 --plugin-module dim_permit_type_generator --sql --schema public --dim-table dim_type --columns id value label \
+	>> temp_sql/dimension_data.sql
 
 
 normalize:
@@ -52,9 +72,15 @@ pipeline-lex:
 
 	ls data/FOIL*.jsonl > tempdata/pre_ingest_files.txt
 
-	loopr -t --listfile tempdata/pre_ingest_files.txt --vartoken '%' \
-	--cmd-string 'cat % | ngst --config config/ingest_lexfiles.yaml --target test'
-	
+	cp template_files/shell_script_core.sh.tpl temp_scripts/ingest_records.sh
+
+	loopr -p -t --listfile tempdata/pre_ingest_files.txt --vartoken '%' \
+	--cmd-string 'cat % | ngst --config config/ingest_lexfiles.yaml --target db' \
+	>> temp_scripts/ingest_records.sh
+
+	chmod u+x temp_scripts/ingest_records.sh
+	#temp_scripts/ingest_records.sh
+
 
 
 scratch:
