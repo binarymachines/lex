@@ -15,25 +15,22 @@ service_objects:
           value: 5432
     
         - name: dbname
-          value: lex
+          value: lexdb
 
         - name: schema
           value: public
     
         - name: username
-          value: postgres
+          value: lexdba
     
         - name: password
-          value: notobvious
+          value: $LEX_DB_PASSWORD
 
         - name: connect_timeout
           value: 5
 
 
 datastores:
-  console:
-    class: ConsoleDatastore
-    init_params:
 
   db:
     class: PostgresDatastore

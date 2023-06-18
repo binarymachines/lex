@@ -27,5 +27,5 @@ p_types = [
 def line_array_generator(**kwargs):    
     id = 1
     for p_type in p_types:
-        yield [id, f"p_type['abbrev']", f"p_type['desc']"]
+        yield [id, f"\'{p_type['abbrev']}\'", f"\'{p_type['desc']}\'"]
         id += 1 

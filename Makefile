@@ -9,9 +9,11 @@ clean:
 	rm -f temp_sql/*
 
 
-generate-dim-data:
+dblogin:
+	psql -U lexdba --port=5432 --host=localhost -d lexdb
 
 
+db-generate-dim-data:
 	cat /dev/null > temp_sql/dimension_data.sql
 
 	dgenr8 --plugin-module dim_day_generator --sql --schema public --dim-table dim_date_day --columns id value label \
@@ -23,9 +25,31 @@ generate-dim-data:
 	dgenr8 --plugin-module dim_year_generator --sql --schema public --dim-table dim_date_year --columns id value label \
 	>> temp_sql/dimension_data.sql
 
-
-	dgenr8 --plugin-module dim_permit_type_generator --sql --schema public --dim-table dim_type --columns id value label \
+	dgenr8 --plugin-module dim_permit_type_generator --sql --schema public --dim-table dim_permit_type --columns id value label \
 	>> temp_sql/dimension_data.sql
+
+
+db-create-tables:
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -d $$LEX_DB -h $$LEX_DB_HOST -p $$LEX_DB_PORT -U $$LEX_DB_USER -f sql/lex_db_extensions.sql
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -d $$LEX_DB -h $$LEX_DB_HOST -p $$LEX_DB_PORT -U $$LEX_DB_USER -f sql/lex.sql
+
+
+db-populate-dimensions:
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -U $$LEX_DB_USER -d $$LEX_DB -h $$LEX_DB_HOST -p $$LEX_DB_PORT --file=temp_sql/dimension_data.sql
+
+
+db-purge-dimensions:
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -U $$LEX_DB_USER -d $$LEX_DB -h $$LEX_DB_HOST -p $$LEX_DB_PORT \
+	--file=sql/truncate_dimension_tables.sql
+
+
+db-purge-facts:
+	export PGPASSWORD=$$LEX_DB_PASSWORD && psql -w -U $$LEX_DB_USER -d $$LEX_DB -h $$LEX_DB_HOST -p $$LEX_DB_PORT \
+	--file=sql/truncate_fact_tables.sql
+
+
+db-purge-olap: db-purge-dimensions db-purge-facts
+
 
 
 normalize:

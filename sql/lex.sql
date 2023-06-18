@@ -26,7 +26,7 @@ CREATE TABLE "dim_status" (
   PRIMARY KEY ("id")
 );
 
-CREATE TABLE "dim_type" (
+CREATE TABLE "dim_permit_type" (
   "id" int4 NOT NULL,
   "value" varchar(2) NOT NULL,
   "label" varchar(64) NOT NULL,
