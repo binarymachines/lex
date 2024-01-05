@@ -1,0 +1,50 @@
+PREREQUISITES:
+Nix
+Python 3.11 or higher
+A working PostgreSQL instance containing a database called "lexdb", owned by "lexdba"
+
+To set up the tooling environment (in a local context) and run the data pipelines:
+
+ - clone the repo
+ - issue "nix-shell" to install the system dependencies
+ - issue 
+    "poetry install"
+
+    and then
+
+    "poetry shell" 
+    
+    to install the Python dependencies and start the virtual environment.
+
+ - set the necessary environment vars: 
+
+	PYTHONPATH must include the repository root directory. ( export PYTHONPATH=`pwd` )
+   LEX_HOME (must be set to the repo root)
+   LEX_DB
+   LEX_DB_HOST
+   LEX_DB_PORT
+   LEX_DB_USER
+   LEX_DB_PASSWORD
+   PGPASSWORD should be set to the same value as LEX_DB_PASSWORD.
+
+
+Then, at the shell prompt, issue:
+
+ make <pipeline-name>
+
+ where <pipeline-name> is the name of a make target, to run the code.
+
+ Run the init-dirs target first to create all the temporary directories the project will need.
+
+
+++++++++++++++++++++++++++++++++++
++
++ Makefile instrumentation: "makeblocks"
+
+The Makefile may contain some comments which contain a particular syntax of the form:
+
++open-varblock(...)
++open-cmdblock(...)
+
+and so on. These comments are part of the data pipeline testing and instrumentation system. Do not alter or remove them
+unless you know what you are doing.
